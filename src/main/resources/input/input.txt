@@ -1,0 +1,4 @@
+amount:100000
+percent:10
+date:28.05.2018
+term:36
