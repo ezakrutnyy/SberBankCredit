@@ -1,6 +1,6 @@
 package payments;
 
-import util.TypeSortEnum;
+import enums.TypeSortEnum;
 
 import java.text.ParseException;
 

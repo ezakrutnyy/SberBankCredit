@@ -1,26 +1,26 @@
-package transfer;
+package hibernate.impl;
 
-import dto.AccountDTO;
+import hibernate.entity.Account;
 import exception.TransferException;
-import service.AccountService;
+import hibernate.service.AccountService;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
 
 /**
- * Created by Евгений on 23.05.2018.
+ * Created by Евгений on 25.05.2018.
  */
 public class TransferOperation {
 
-    public void transferAmount(final AccountDTO accountFrom,
-                               final AccountDTO accountTo,
+    public void transferAmount(final Account accountFrom,
+                               final Account accountTo,
                                final BigDecimal amount) throws TransferException {
 
         final Long idFrom = accountFrom.getId();
         final Long idTo = accountTo.getId();
 
-        final AccountDTO lock1 = idFrom < idTo ? accountFrom : accountTo;
-        final AccountDTO lock2 = idFrom < idTo ? accountTo : accountFrom;
+        final Account lock1 = idFrom < idTo ? accountFrom : accountTo;
+        final Account lock2 = idFrom < idTo ? accountTo : accountFrom;
 
         /**
          * Same account
@@ -30,7 +30,7 @@ public class TransferOperation {
          * и перед синхронизацией по lock1 и lock2, необходима синхронизация по globalLock
          *
          * */
-        if (accountFrom.getNumber().equals(accountTo.getNumber())) {
+        if (accountFrom.getAccNumber().equals(accountTo.getAccNumber())) {
             throw new TransferException("Ошибка операции. Источник и приемник имеют общий счет.");
         }
 
@@ -41,15 +41,14 @@ public class TransferOperation {
         }
     }
 
-    private void changeQueryBalance(final AccountDTO accountFrom,
-                              final AccountDTO accountTo,
-                              final BigDecimal amount) {
-        final AccountService service = new AccountService();
+    private void changeQueryBalance(final Account accountFrom,
+                                    final Account accountTo,
+                                    final BigDecimal amount) {
+        AccountService service = new AccountService();
         try {
             service.transferAcount(accountFrom, accountTo, amount);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-
 }

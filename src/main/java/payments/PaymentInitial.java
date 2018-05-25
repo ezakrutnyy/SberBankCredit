@@ -7,8 +7,7 @@ import exception.ValidatePercentException;
 import exception.ValidateTermException;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
-import payments.PaymentsOperaions;
-import util.TypeSortEnum;
+import enums.TypeSortEnum;
 
 import java.io.*;
 import java.math.BigDecimal;

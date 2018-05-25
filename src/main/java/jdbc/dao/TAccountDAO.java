@@ -1,6 +1,6 @@
-package dao;
+package jdbc.dao;
 
-import dto.AccountDTO;
+import jdbc.entity.AccountDTO;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;

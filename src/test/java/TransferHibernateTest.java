@@ -1,7 +1,8 @@
-import jdbc.entity.AccountDTO;
+
+import hibernate.entity.Account;
 import org.junit.Test;
-import jdbc.service.AccountService;
-import jdbc.impl.TransferOperation;
+import hibernate.service.AccountService;
+import hibernate.impl.TransferOperation;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
@@ -13,9 +14,9 @@ import java.util.concurrent.TimeUnit;
 import static junit.framework.TestCase.assertEquals;
 
 /**
- * Created by Евгений on 24.05.2018.
+ * Created by Евгений on 25.05.2018.
  */
-public class TransferTest {
+public class TransferHibernateTest {
 
     // input params
     final private String accountNumberFrom = "40817810340000701301";
@@ -23,13 +24,14 @@ public class TransferTest {
     final private BigDecimal amount = new BigDecimal(15000);
 
     @Test
-    public void transferSingleThreadTest() throws SQLException {
+    public void transferHbnSingleThreadTest() throws SQLException {
+
         final AccountService service = new AccountService();
-        List<AccountDTO> lst = service.getResult();
+        List<Account> lst = service.getResult();
         assertEquals(lst.size(),9);
 
-        AccountDTO accountFrom = service.getByAccNumber(accountNumberFrom);
-        AccountDTO accountTo =  service.getByAccNumber(accountNumberTo);
+        Account accountFrom = service.getByAccNumber(accountNumberFrom);
+        Account accountTo =  service.getByAccNumber(accountNumberTo);
 
         assertEquals(accountFrom.getBalance().compareTo(new BigDecimal(100000)), 0);
         assertEquals(accountTo.getBalance().compareTo(new BigDecimal(120000)), 0);
@@ -60,23 +62,22 @@ public class TransferTest {
         assertEquals(accountTo.getBalance().compareTo(new BigDecimal(120000)), 0);
     }
 
-
     @Test
-    public void transferThreadsTest() throws SQLException, InterruptedException {
+    public void transferHbnThreadsTest() throws SQLException, InterruptedException {
 
         final AccountService service = new AccountService();
-        List<AccountDTO> lst = service.getResult();
+        List<Account> lst = service.getResult();
         assertEquals(lst.size(),9);
 
-        AccountDTO accountFrom = service.getByAccNumber(accountNumberFrom);
-        AccountDTO accountTo =  service.getByAccNumber(accountNumberTo);
+        Account accountFrom = service.getByAccNumber(accountNumberFrom);
+        Account accountTo =  service.getByAccNumber(accountNumberTo);
 
-        MyTransferThread tr1 = new MyTransferThread(accountFrom, accountTo);
-        MyTransferThread tr2 = new MyTransferThread(accountTo, accountFrom);
-        MyTransferThread tr3 = new MyTransferThread(accountFrom, accountTo);
-        MyTransferThread tr4 = new MyTransferThread(accountTo, accountFrom);
-        MyTransferThread tr5 = new MyTransferThread(accountFrom, accountTo);
-        MyTransferThread tr6 = new MyTransferThread(accountTo, accountFrom);
+        MyTransferHbmThread tr1 = new MyTransferHbmThread(accountFrom, accountTo);
+        MyTransferHbmThread tr2 = new MyTransferHbmThread(accountTo, accountFrom);
+        MyTransferHbmThread tr3 = new MyTransferHbmThread(accountFrom, accountTo);
+        MyTransferHbmThread tr4 = new MyTransferHbmThread(accountTo, accountFrom);
+        MyTransferHbmThread tr5 = new MyTransferHbmThread(accountFrom, accountTo);
+        MyTransferHbmThread tr6 = new MyTransferHbmThread(accountTo, accountFrom);
 
         ExecutorService pool = Executors.newCachedThreadPool();
 
@@ -99,16 +100,15 @@ public class TransferTest {
     }
 }
 
-
-class MyTransferThread extends  Thread {
+class MyTransferHbmThread extends  Thread {
 
     private TransferOperation transfer = new TransferOperation();
     final private BigDecimal amount = new BigDecimal(15000);
 
-    AccountDTO accountFrom;
-    AccountDTO accountTo;
+    Account accountFrom;
+    Account accountTo;
 
-    MyTransferThread(AccountDTO accountFrom, AccountDTO accountTo) {
+    MyTransferHbmThread(Account accountFrom, Account accountTo) {
         this.accountFrom = accountFrom;
         this.accountTo = accountTo;
     }

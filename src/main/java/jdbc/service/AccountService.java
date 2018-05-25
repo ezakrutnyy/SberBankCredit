@@ -1,10 +1,10 @@
-package service;
+package jdbc.service;
 
-import dao.TAccountDAO;
+import jdbc.dao.TAccountDAO;
 
-import dto.AccountDTO;
+import jdbc.entity.AccountDTO;
 import exception.TransferException;
-import util.Util;
+import jdbc.util.Util;
 
 import java.math.BigDecimal;
 import java.sql.*;
@@ -70,7 +70,7 @@ public class AccountService extends Util implements TAccountDAO {
 
                 }
                 resList.addAll(resInnerList);
-                if (resInnerList.size()!=BATCH_SIZE) {
+                if (resInnerList.size() != BATCH_SIZE) {
                     flagEndCursor = true;
                 }
                 offset += BATCH_SIZE;
@@ -133,7 +133,7 @@ public class AccountService extends Util implements TAccountDAO {
             final AccountDTO actualAccountFrom = getByAccNumber(accountFrom.getNumber());
             final AccountDTO actualAccountTo = getByAccNumber(accountTo.getNumber());
 
-            // Insufficient fund on dto.Account
+            // Insufficient fund on Account
             if (actualAccountFrom.getBalance().compareTo(amount) < 0) {
                 throw new TransferException("Ошибка операции. Недостаточно средств на балансе счета.");
             }

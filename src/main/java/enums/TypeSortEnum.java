@@ -1,4 +1,4 @@
-package util;
+package enums;
 
 /**
  * Created by Евгений on 19.05.2018.

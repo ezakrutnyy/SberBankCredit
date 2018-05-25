@@ -1,6 +1,6 @@
 import org.junit.Test;
 import payments.PaymentInitial;
-import util.TypeSortEnum;
+import enums.TypeSortEnum;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
