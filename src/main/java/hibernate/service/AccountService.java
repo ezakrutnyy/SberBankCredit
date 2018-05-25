@@ -87,14 +87,15 @@ public class AccountService extends SessionUtil implements TAccountDAO {
         final Account actualAccountFrom = getByAccNumber(accountFrom.getAccNumber());
         final Account actualAccountTo = getByAccNumber(accountTo.getAccNumber());
 
-        // Start transaction and open session
-        openTransactionSession();
-        final Session session = getSession();
-
         // Insufficient fund on Account
         if (actualAccountFrom.getBalance().compareTo(amount) < 0) {
             throw new TransferException("Ошибка операции. Недостаточно средств на балансе счета.");
         }
+
+        // Start transaction and open session
+        openTransactionSession();
+        final Session session = getSession();
+
         actualAccountFrom.setBalance(
                 actualAccountFrom.getBalance().subtract(amount));
         actualAccountTo.setBalance(
